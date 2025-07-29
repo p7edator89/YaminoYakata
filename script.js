@@ -474,15 +474,7 @@ function lockOrientationToLandscape() {
     if (window.orientation !== undefined) {
         // 縦向きの場合は画面を回転
         if (window.orientation === 0 || window.orientation === 180) {
-            document.body.style.transform = 'rotate(90deg)';
-            document.body.style.transformOrigin = 'left top';
-            document.body.style.width = '100vh';
-            document.body.style.height = '100vw';
-            document.body.style.overflowX = 'hidden';
-            document.body.style.overflowY = 'auto';
-            document.body.style.position = 'absolute';
-            document.body.style.top = '100%';
-            document.body.style.left = '0';
+            applyLandscapeTransform();
         }
     }
     
@@ -491,25 +483,10 @@ function lockOrientationToLandscape() {
         setTimeout(() => {
             if (window.orientation === 0 || window.orientation === 180) {
                 // 縦向きになった場合は横向きに強制回転
-                document.body.style.transform = 'rotate(90deg)';
-                document.body.style.transformOrigin = 'left top';
-                document.body.style.width = '100vh';
-                document.body.style.height = '100vw';
-                document.body.style.overflowX = 'hidden';
-                document.body.style.overflowY = 'auto';
-                document.body.style.position = 'absolute';
-                document.body.style.top = '100%';
-                document.body.style.left = '0';
+                applyLandscapeTransform();
             } else {
                 // 横向きの場合は通常表示
-                document.body.style.transform = '';
-                document.body.style.width = '';
-                document.body.style.height = '';
-                document.body.style.overflowX = '';
-                document.body.style.overflowY = '';
-                document.body.style.position = '';
-                document.body.style.top = '';
-                document.body.style.left = '';
+                removeLandscapeTransform();
             }
         }, 100);
     });
@@ -519,18 +496,99 @@ function lockOrientationToLandscape() {
         if (window.innerWidth < 768) {
             // スマホサイズの場合、横向き固定を適用
             if (window.orientation === 0 || window.orientation === 180) {
-                document.body.style.transform = 'rotate(90deg)';
-                document.body.style.transformOrigin = 'left top';
-                document.body.style.width = '100vh';
-                document.body.style.height = '100vw';
-                document.body.style.overflowX = 'hidden';
-                document.body.style.overflowY = 'auto';
-                document.body.style.position = 'absolute';
-                document.body.style.top = '100%';
-                document.body.style.left = '0';
+                applyLandscapeTransform();
             }
         }
+        
+        // 動的レイアウト調整
+        adjustLayoutForScreenSize();
     });
+    
+    // 初期レイアウト調整
+    adjustLayoutForScreenSize();
+}
+
+// 横向き変換を適用する関数
+function applyLandscapeTransform() {
+    document.body.style.transform = 'rotate(90deg)';
+    document.body.style.transformOrigin = 'left top';
+    document.body.style.width = '100vh';
+    document.body.style.height = '100vw';
+    document.body.style.overflowX = 'hidden';
+    document.body.style.overflowY = 'auto';
+    document.body.style.position = 'absolute';
+    document.body.style.top = '100%';
+    document.body.style.left = '0';
+}
+
+// 横向き変換を解除する関数
+function removeLandscapeTransform() {
+    document.body.style.transform = '';
+    document.body.style.width = '';
+    document.body.style.height = '';
+    document.body.style.overflowX = '';
+    document.body.style.overflowY = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+}
+
+// 画面サイズに応じてレイアウトを動的調整する関数
+function adjustLayoutForScreenSize() {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    
+    // スマホサイズの場合
+    if (screenWidth < 768) {
+        // ゲームコンテナのサイズ調整
+        const gameContainer = document.getElementById('game-container');
+        if (gameContainer) {
+            gameContainer.style.width = '100vh';
+            gameContainer.style.height = '100vw';
+        }
+        
+        // UIパネルの高さ調整
+        const uiPanel = document.getElementById('ui-panel');
+        if (uiPanel) {
+            const panelHeight = Math.min(screenHeight * 0.4, 200);
+            uiPanel.style.maxHeight = `${panelHeight}px`;
+        }
+        
+        // インベントリの高さ調整
+        const inventoryItems = document.getElementById('inventory-items');
+        if (inventoryItems) {
+            const inventoryHeight = Math.min(screenHeight * 0.15, 80);
+            inventoryItems.style.maxHeight = `${inventoryHeight}px`;
+        }
+        
+        // メッセージエリアの高さ調整
+        const messageArea = document.getElementById('message-area');
+        if (messageArea) {
+            const messageHeight = Math.min(screenHeight * 0.2, 120);
+            messageArea.style.maxHeight = `${messageHeight}px`;
+        }
+        
+        // 部屋移動ボタンの高さ調整
+        const roomNavButtons = document.getElementById('room-nav-buttons');
+        if (roomNavButtons) {
+            const navHeight = Math.min(screenHeight * 0.1, 60);
+            roomNavButtons.style.maxHeight = `${navHeight}px`;
+        }
+        
+        // パズル画面の位置調整
+        const puzzleDiscoveryChance = document.getElementById('puzzle-discovery-chance');
+        if (puzzleDiscoveryChance) {
+            const topPosition = Math.max(screenHeight * 0.1, 40);
+            puzzleDiscoveryChance.style.top = `${topPosition}px`;
+        }
+        
+        // ストーリー通知の位置調整
+        const storyNotification = document.getElementById('story-notification');
+        if (storyNotification) {
+            const bottomPosition = Math.max(screenHeight * 0.02, 5);
+            storyNotification.style.bottom = `${bottomPosition}px`;
+        }
+    }
 }
 
 function initializeGame() {
@@ -585,6 +643,8 @@ function initializeGame() {
         if (document.getElementById('puzzle-screen').classList.contains('active')) {
             adjustDiscoveryChancePosition();
         }
+        // 動的レイアウト調整
+        adjustLayoutForScreenSize();
     });
 }
 

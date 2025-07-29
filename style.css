@@ -1245,229 +1245,258 @@ body {
         height: 100vw;
     }
     
+    /* 画面サイズに応じた動的フォントサイズ */
     .title {
-        font-size: 2rem;
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
     }
     
     .subtitle {
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 2vw, 1.2rem);
     }
     
     .game-instructions {
-        padding: 10px;
-        margin-bottom: 1rem;
-        max-width: 80vh;
+        padding: clamp(8px, 2vw, 15px);
+        margin-bottom: clamp(0.5rem, 2vw, 1.5rem);
+        max-width: 85vw;
     }
     
     .game-instructions h3 {
-        font-size: 1rem;
+        font-size: clamp(0.9rem, 2.5vw, 1.3rem);
     }
     
     .instructions-content {
-        font-size: 0.8rem;
+        font-size: clamp(0.7rem, 2vw, 1rem);
     }
     
     .game-btn {
-        padding: 8px 15px;
-        font-size: 0.9rem;
+        padding: clamp(6px, 2vw, 12px) clamp(10px, 3vw, 20px);
+        font-size: clamp(0.8rem, 2.5vw, 1.2rem);
     }
     
     #game-area {
         flex-direction: row;
+        gap: clamp(3px, 1vw, 8px);
     }
     
     #room-container {
         flex: 2;
         min-height: auto;
-        margin: 3px;
+        margin: clamp(2px, 1vw, 5px);
     }
     
     #ui-panel {
         flex: 1;
         height: auto;
-        margin: 3px;
-        padding: 10px;
+        margin: clamp(2px, 1vw, 5px);
+        padding: clamp(8px, 2vw, 15px);
     }
     
     #inventory-items {
         grid-template-columns: repeat(2, 1fr);
-        gap: 5px;
-        max-height: 80px;
+        gap: clamp(3px, 1vw, 6px);
+        max-height: clamp(60px, 15vh, 100px);
     }
     
     .inventory-item {
-        min-height: 40px;
-        font-size: 0.7rem;
-        padding: 4px;
+        min-height: clamp(30px, 8vh, 50px);
+        font-size: clamp(0.6rem, 2vw, 0.9rem);
+        padding: clamp(2px, 1vw, 6px);
     }
     
     .control-btn {
-        font-size: 0.8rem;
-        padding: 6px 8px;
-        min-width: 50px;
+        font-size: clamp(0.7rem, 2.5vw, 1rem);
+        padding: clamp(4px, 1.5vw, 8px) clamp(6px, 2vw, 12px);
+        min-width: clamp(40px, 12vw, 70px);
     }
     
     #message-area {
-        max-height: 80px;
-        padding: 8px;
+        max-height: clamp(60px, 15vh, 100px);
+        padding: clamp(6px, 2vw, 12px);
     }
     
     #message-text {
-        font-size: 0.8rem;
+        font-size: clamp(0.7rem, 2vw, 1rem);
     }
     
     #discovery-chance-display {
-        padding: 6px 10px;
-        right: 3px;
-        top: 3px;
+        padding: clamp(4px, 1.5vw, 8px) clamp(6px, 2vw, 12px);
+        right: clamp(2px, 1vw, 5px);
+        top: clamp(2px, 1vw, 5px);
     }
     
     #discovery-chance {
-        font-size: 1rem;
+        font-size: clamp(0.9rem, 3vw, 1.4rem);
     }
     
     #current-room-display {
-        top: 3px;
-        left: 3px;
-        padding: 4px 8px;
-        font-size: 0.7rem;
+        top: clamp(2px, 1vw, 5px);
+        left: clamp(2px, 1vw, 5px);
+        padding: clamp(3px, 1vw, 6px) clamp(6px, 2vw, 10px);
+        font-size: clamp(0.6rem, 2vw, 0.9rem);
     }
     
     .interactive-object {
-        min-width: 35px;
-        min-height: 20px;
-        font-size: 0.6rem;
+        min-width: clamp(25px, 8vw, 50px);
+        min-height: clamp(15px, 5vh, 30px);
+        font-size: clamp(0.5rem, 1.5vw, 0.8rem);
     }
     
     .direction-arrow {
-        width: 40px;
-        height: 40px;
-        font-size: 25px;
+        width: clamp(30px, 10vw, 60px);
+        height: clamp(30px, 10vw, 60px);
+        font-size: clamp(18px, 6vw, 40px);
     }
     
     #puzzle-container {
-        padding: 15px;
-        margin-top: 40px;
-        max-width: 80vh;
+        padding: clamp(12px, 3vw, 20px);
+        margin-top: clamp(30px, 8vh, 60px);
+        max-width: 85vw;
     }
     
     #puzzle-title {
-        font-size: 1.3rem;
+        font-size: clamp(1.1rem, 4vw, 1.8rem);
     }
     
     #puzzle-content {
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 2.5vw, 1.2rem);
     }
     
     #puzzle-answer {
-        padding: 8px;
-        font-size: 0.9rem;
+        padding: clamp(6px, 2vw, 12px);
+        font-size: clamp(0.8rem, 2.5vw, 1.2rem);
     }
     
     .choice-option {
-        padding: 8px 10px;
-        font-size: 0.8rem;
+        padding: clamp(6px, 2vw, 12px) clamp(8px, 2.5vw, 15px);
+        font-size: clamp(0.7rem, 2.5vw, 1rem);
     }
     
     .pattern-cell {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
+        width: clamp(25px, 8vw, 50px);
+        height: clamp(25px, 8vw, 50px);
+        font-size: clamp(0.8rem, 3vw, 1.5rem);
     }
     
     #pattern-grid {
-        max-width: 180px;
-        padding: 10px;
-        gap: 3px;
+        max-width: clamp(140px, 40vw, 250px);
+        padding: clamp(8px, 2vw, 15px);
+        gap: clamp(2px, 1vw, 5px);
     }
     
     .ending-title, .gameover-title {
-        font-size: 1.8rem;
+        font-size: clamp(1.5rem, 6vw, 3rem);
     }
     
     .ending-text, .gameover-text {
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 2.5vw, 1.2rem);
     }
     
     #story-notification {
-        bottom: 5px;
-        padding: 10px;
-        max-width: 80vh;
+        bottom: clamp(3px, 1vw, 10px);
+        padding: clamp(8px, 2vw, 15px);
+        max-width: 85vw;
     }
     
     #story-content {
-        font-size: 1rem;
+        font-size: clamp(0.9rem, 3vw, 1.4rem);
     }
     
     #room-navigation {
-        padding: 6px 5px;
+        padding: clamp(4px, 1.5vw, 8px) clamp(3px, 1vw, 6px);
     }
     
     #room-nav-buttons {
-        max-height: 60px;
+        max-height: clamp(40px, 12vh, 80px);
     }
     
     .room-nav-btn {
-        padding: 4px 4px;
-        font-size: 0.7rem;
-        min-height: 25px;
+        padding: clamp(3px, 1vw, 6px) clamp(3px, 1vw, 6px);
+        font-size: clamp(0.6rem, 2vw, 0.9rem);
+        min-height: clamp(20px, 6vh, 35px);
     }
     
     #puzzle-discovery-chance {
-        width: 240px;
-        left: calc(50% - 120px);
-        font-size: 1.3rem;
-        padding: 10px;
+        width: clamp(180px, 50vw, 320px);
+        left: calc(50% - clamp(90px, 25vw, 160px));
+        font-size: clamp(1.1rem, 4vw, 1.8rem);
+        padding: clamp(8px, 2vw, 15px);
     }
     
     /* 選択中オブジェクト表示 */
     #selected-object-display {
-        padding: 6px;
-        margin-bottom: 8px;
+        padding: clamp(4px, 1.5vw, 8px);
+        margin-bottom: clamp(5px, 1.5vw, 10px);
     }
     
     #selected-object-display h3 {
-        font-size: 0.9rem;
-        margin-bottom: 4px;
+        font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+        margin-bottom: clamp(3px, 1vw, 6px);
     }
     
     #selected-object-info {
-        font-size: 0.8rem;
-        padding: 3px;
+        font-size: clamp(0.7rem, 2vw, 1rem);
+        padding: clamp(2px, 1vw, 5px);
     }
     
     /* メッセージエリア */
     #message-area h3 {
-        font-size: 0.9rem;
-        margin-bottom: 5px;
+        font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+        margin-bottom: clamp(3px, 1vw, 6px);
     }
     
     /* インベントリ */
     #inventory h3 {
-        font-size: 1rem;
-        margin-bottom: 6px;
+        font-size: clamp(0.9rem, 3vw, 1.3rem);
+        margin-bottom: clamp(4px, 1.5vw, 8px);
     }
     
     /* 部屋移動 */
     #room-navigation h3 {
-        font-size: 0.9rem;
-        margin-bottom: 6px;
+        font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+        margin-bottom: clamp(4px, 1.5vw, 8px);
+    }
+    
+    /* 警告メッセージ */
+    .warning {
+        font-size: clamp(0.7rem, 2vw, 0.9rem);
+        bottom: clamp(1rem, 3vh, 2rem);
+    }
+    
+    /* オーディオコントロール */
+    .audio-btn {
+        min-width: clamp(25px, 8vw, 35px);
+        height: clamp(25px, 8vw, 35px);
+        font-size: clamp(0.8rem, 2.5vw, 1rem);
+        padding: clamp(2px, 1vw, 4px) clamp(4px, 1.5vw, 8px);
+    }
+    
+    /* ツールチップ */
+    .object-tooltip, .arrow-tooltip {
+        font-size: clamp(12px, 3vw, 16px);
+        padding: clamp(6px, 2vw, 12px) clamp(12px, 3vw, 20px);
+    }
+    
+    /* ストーリー閉じるボタン */
+    #close-story {
+        font-size: clamp(0.8rem, 2.5vw, 1rem);
+        padding: clamp(6px, 2vw, 10px) clamp(10px, 3vw, 15px);
+        margin-top: clamp(10px, 3vh, 20px);
     }
 }
 
 /* より小さいスマホ用 */
 @media (max-width: 480px) {
     .title {
-        font-size: 1.8rem;
+        font-size: clamp(1.3rem, 5vw, 2rem);
     }
     
     .subtitle {
-        font-size: 0.8rem;
+        font-size: clamp(0.7rem, 2.5vw, 1rem);
     }
     
     .game-btn {
-        padding: 6px 12px;
-        font-size: 0.8rem;
+        padding: clamp(5px, 2vw, 10px) clamp(8px, 3vw, 15px);
+        font-size: clamp(0.7rem, 3vw, 1rem);
     }
     
     #room-container {
@@ -1476,162 +1505,189 @@ body {
     
     #ui-panel {
         height: 50%;
-        padding: 8px;
+        padding: clamp(6px, 2vw, 12px);
     }
     
     #inventory-items {
         grid-template-columns: repeat(2, 1fr);
-        gap: 4px;
-        max-height: 70px;
+        gap: clamp(2px, 1vw, 5px);
+        max-height: clamp(50px, 12vh, 80px);
     }
     
     .inventory-item {
-        min-height: 35px;
-        font-size: 0.65rem;
-        padding: 3px;
+        min-height: clamp(25px, 6vh, 45px);
+        font-size: clamp(0.5rem, 2.5vw, 0.8rem);
+        padding: clamp(2px, 1vw, 5px);
     }
     
     .control-btn {
-        font-size: 0.7rem;
-        padding: 5px 6px;
-        min-width: 45px;
+        font-size: clamp(0.6rem, 3vw, 0.9rem);
+        padding: clamp(3px, 1.5vw, 6px) clamp(4px, 2vw, 8px);
+        min-width: clamp(35px, 15vw, 60px);
     }
     
     #message-area {
-        max-height: 70px;
-        padding: 6px;
+        max-height: clamp(50px, 12vh, 80px);
+        padding: clamp(4px, 2vw, 8px);
     }
     
     #message-text {
-        font-size: 0.75rem;
+        font-size: clamp(0.6rem, 2.5vw, 0.9rem);
     }
     
     #discovery-chance {
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 3.5vw, 1.2rem);
     }
     
     #current-room-display {
-        font-size: 0.65rem;
-        padding: 3px 6px;
+        font-size: clamp(0.5rem, 2.5vw, 0.8rem);
+        padding: clamp(2px, 1vw, 5px) clamp(4px, 2vw, 8px);
     }
     
     .interactive-object {
-        min-width: 30px;
-        min-height: 18px;
-        font-size: 0.55rem;
+        min-width: clamp(20px, 10vw, 40px);
+        min-height: clamp(12px, 6vh, 25px);
+        font-size: clamp(0.4rem, 2vw, 0.7rem);
     }
     
     .direction-arrow {
-        width: 35px;
-        height: 35px;
-        font-size: 22px;
+        width: clamp(25px, 12vw, 50px);
+        height: clamp(25px, 12vw, 50px);
+        font-size: clamp(15px, 7vw, 30px);
     }
     
     #puzzle-container {
-        padding: 12px;
-        margin-top: 35px;
+        padding: clamp(8px, 3vw, 15px);
+        margin-top: clamp(25px, 6vh, 50px);
     }
     
     #puzzle-title {
-        font-size: 1.1rem;
+        font-size: clamp(1rem, 4.5vw, 1.5rem);
     }
     
     #puzzle-content {
-        font-size: 0.8rem;
+        font-size: clamp(0.7rem, 3vw, 1rem);
     }
     
     #puzzle-answer {
-        padding: 6px;
-        font-size: 0.8rem;
+        padding: clamp(4px, 2vw, 8px);
+        font-size: clamp(0.7rem, 3vw, 1rem);
     }
     
     .choice-option {
-        padding: 6px 8px;
-        font-size: 0.75rem;
+        padding: clamp(4px, 2vw, 8px) clamp(6px, 3vw, 12px);
+        font-size: clamp(0.6rem, 3vw, 0.9rem);
     }
     
     .pattern-cell {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
+        width: clamp(20px, 10vw, 40px);
+        height: clamp(20px, 10vw, 40px);
+        font-size: clamp(0.7rem, 3.5vw, 1.2rem);
     }
     
     #pattern-grid {
-        max-width: 150px;
-        padding: 8px;
-        gap: 2px;
+        max-width: clamp(120px, 50vw, 200px);
+        padding: clamp(6px, 2vw, 12px);
+        gap: clamp(1px, 1vw, 3px);
     }
     
     .ending-title, .gameover-title {
-        font-size: 1.6rem;
+        font-size: clamp(1.3rem, 7vw, 2.5rem);
     }
     
     .ending-text, .gameover-text {
-        font-size: 0.8rem;
+        font-size: clamp(0.7rem, 3vw, 1rem);
     }
     
     #story-notification {
-        bottom: 3px;
-        padding: 8px;
+        bottom: clamp(2px, 1vw, 8px);
+        padding: clamp(6px, 2vw, 12px);
     }
     
     #story-content {
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 3.5vw, 1.2rem);
     }
     
     #room-navigation {
-        padding: 5px 4px;
+        padding: clamp(3px, 1.5vw, 6px) clamp(2px, 1vw, 5px);
     }
     
     #room-nav-buttons {
-        max-height: 50px;
+        max-height: clamp(35px, 10vh, 60px);
     }
     
     .room-nav-btn {
-        padding: 3px 3px;
-        font-size: 0.65rem;
-        min-height: 22px;
+        padding: clamp(2px, 1vw, 5px) clamp(2px, 1vw, 5px);
+        font-size: clamp(0.5rem, 2.5vw, 0.8rem);
+        min-height: clamp(18px, 5vh, 30px);
     }
     
     #puzzle-discovery-chance {
-        width: 200px;
-        left: calc(50% - 100px);
-        font-size: 1.1rem;
-        padding: 8px;
+        width: clamp(150px, 60vw, 280px);
+        left: calc(50% - clamp(75px, 30vw, 140px));
+        font-size: clamp(1rem, 4.5vw, 1.5rem);
+        padding: clamp(6px, 2vw, 12px);
     }
     
     /* 選択中オブジェクト表示 */
     #selected-object-display {
-        padding: 4px;
-        margin-bottom: 6px;
+        padding: clamp(3px, 1.5vw, 6px);
+        margin-bottom: clamp(4px, 1.5vw, 8px);
     }
     
     #selected-object-display h3 {
-        font-size: 0.8rem;
-        margin-bottom: 3px;
+        font-size: clamp(0.7rem, 3vw, 1rem);
+        margin-bottom: clamp(2px, 1vw, 4px);
     }
     
     #selected-object-info {
-        font-size: 0.7rem;
-        padding: 2px;
+        font-size: clamp(0.6rem, 2.5vw, 0.9rem);
+        padding: clamp(1px, 1vw, 3px);
     }
     
     /* メッセージエリア */
     #message-area h3 {
-        font-size: 0.8rem;
-        margin-bottom: 4px;
+        font-size: clamp(0.7rem, 3vw, 1rem);
+        margin-bottom: clamp(2px, 1vw, 4px);
     }
     
     /* インベントリ */
     #inventory h3 {
-        font-size: 0.9rem;
-        margin-bottom: 5px;
+        font-size: clamp(0.8rem, 3.5vw, 1.2rem);
+        margin-bottom: clamp(3px, 1.5vw, 6px);
     }
     
     /* 部屋移動 */
     #room-navigation h3 {
-        font-size: 0.8rem;
-        margin-bottom: 5px;
+        font-size: clamp(0.7rem, 3vw, 1rem);
+        margin-bottom: clamp(3px, 1.5vw, 6px);
+    }
+    
+    /* 警告メッセージ */
+    .warning {
+        font-size: clamp(0.6rem, 2.5vw, 0.8rem);
+        bottom: clamp(0.8rem, 2.5vh, 1.5rem);
+    }
+    
+    /* オーディオコントロール */
+    .audio-btn {
+        min-width: clamp(20px, 10vw, 30px);
+        height: clamp(20px, 10vw, 30px);
+        font-size: clamp(0.7rem, 3vw, 0.9rem);
+        padding: clamp(1px, 1vw, 3px) clamp(3px, 1.5vw, 6px);
+    }
+    
+    /* ツールチップ */
+    .object-tooltip, .arrow-tooltip {
+        font-size: clamp(10px, 3.5vw, 14px);
+        padding: clamp(4px, 2vw, 8px) clamp(8px, 3vw, 15px);
+    }
+    
+    /* ストーリー閉じるボタン */
+    #close-story {
+        font-size: clamp(0.7rem, 3vw, 0.9rem);
+        padding: clamp(4px, 2vw, 8px) clamp(8px, 3vw, 12px);
+        margin-top: clamp(8px, 2.5vh, 15px);
     }
 }
 
