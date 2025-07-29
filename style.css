@@ -1238,11 +1238,19 @@ body {
         position: absolute;
         top: 100%;
         left: 0;
+        background: linear-gradient(135deg, #0a0a0a, #1a1a1a, #0f0f0f) !important;
+        background-size: 400% 400% !important;
+        animation: backgroundShift 10s ease-in-out infinite !important;
+        color: #cccccc !important;
+        z-index: 1;
     }
     
     #game-container {
         width: 100vh;
         height: 100vw;
+        background: transparent;
+        position: relative;
+        z-index: 2;
     }
     
     /* 画面サイズに応じた動的フォントサイズ */

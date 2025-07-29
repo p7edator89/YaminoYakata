@@ -456,138 +456,202 @@ function enableGameUI() {
 
 // 初期化
 document.addEventListener('DOMContentLoaded', () => {
-    // スマホの向きを横向きに固定
-    lockOrientationToLandscape();
-    initializeGame();
+    try {
+        // スマホの向きを横向きに固定
+        lockOrientationToLandscape();
+        initializeGame();
+    } catch (error) {
+        console.error('Error during initialization:', error);
+        // エラーが発生した場合は通常の初期化のみ実行
+        initializeGame();
+    }
 });
 
 // スマホの向きを横向きに固定する関数
 function lockOrientationToLandscape() {
-    // 画面の向きを横向きに固定
-    if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(() => {
-            console.log('Orientation lock not supported');
-        });
-    }
-    
-    // iOS Safari用の向き固定
-    if (window.orientation !== undefined) {
-        // 縦向きの場合は画面を回転
-        if (window.orientation === 0 || window.orientation === 180) {
-            applyLandscapeTransform();
+    try {
+        // 画面の向きを横向きに固定
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(() => {
+                console.log('Orientation lock not supported');
+            });
         }
-    }
-    
-    // 画面の向き変更を監視
-    window.addEventListener('orientationchange', () => {
-        setTimeout(() => {
-            if (window.orientation === 0 || window.orientation === 180) {
-                // 縦向きになった場合は横向きに強制回転
-                applyLandscapeTransform();
-            } else {
-                // 横向きの場合は通常表示
-                removeLandscapeTransform();
-            }
-        }, 100);
-    });
-    
-    // リサイズ時の処理
-    window.addEventListener('resize', () => {
-        if (window.innerWidth < 768) {
-            // スマホサイズの場合、横向き固定を適用
+        
+        // iOS Safari用の向き固定
+        if (window.orientation !== undefined) {
+            // 縦向きの場合は画面を回転
             if (window.orientation === 0 || window.orientation === 180) {
                 applyLandscapeTransform();
             }
         }
         
-        // 動的レイアウト調整
+        // 画面の向き変更を監視
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                try {
+                    if (window.orientation === 0 || window.orientation === 180) {
+                        // 縦向きになった場合は横向きに強制回転
+                        applyLandscapeTransform();
+                    } else {
+                        // 横向きの場合は通常表示
+                        removeLandscapeTransform();
+                    }
+                } catch (error) {
+                    console.error('Error in orientation change handler:', error);
+                }
+            }, 100);
+        });
+        
+        // リサイズ時の処理
+        window.addEventListener('resize', () => {
+            try {
+                if (window.innerWidth < 768) {
+                    // スマホサイズの場合、横向き固定を適用
+                    if (window.orientation === 0 || window.orientation === 180) {
+                        applyLandscapeTransform();
+                    }
+                }
+                
+                // 動的レイアウト調整
+                adjustLayoutForScreenSize();
+            } catch (error) {
+                console.error('Error in resize handler:', error);
+            }
+        });
+        
+        // 初期レイアウト調整
         adjustLayoutForScreenSize();
-    });
-    
-    // 初期レイアウト調整
-    adjustLayoutForScreenSize();
+    } catch (error) {
+        console.error('Error in lockOrientationToLandscape:', error);
+    }
 }
 
 // 横向き変換を適用する関数
 function applyLandscapeTransform() {
-    document.body.style.transform = 'rotate(90deg)';
-    document.body.style.transformOrigin = 'left top';
-    document.body.style.width = '100vh';
-    document.body.style.height = '100vw';
-    document.body.style.overflowX = 'hidden';
-    document.body.style.overflowY = 'auto';
-    document.body.style.position = 'absolute';
-    document.body.style.top = '100%';
-    document.body.style.left = '0';
-}
-
-// 横向き変換を解除する関数
-function removeLandscapeTransform() {
-    document.body.style.transform = '';
-    document.body.style.width = '';
-    document.body.style.height = '';
-    document.body.style.overflowX = '';
-    document.body.style.overflowY = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-}
-
-// 画面サイズに応じてレイアウトを動的調整する関数
-function adjustLayoutForScreenSize() {
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    
-    // スマホサイズの場合
-    if (screenWidth < 768) {
-        // ゲームコンテナのサイズ調整
+    try {
+        // 背景色を確実に設定
+        document.body.style.background = 'linear-gradient(135deg, #0a0a0a, #1a1a1a, #0f0f0f)';
+        document.body.style.backgroundSize = '400% 400%';
+        document.body.style.color = '#cccccc';
+        
+        // 横向き変換を適用
+        document.body.style.transform = 'rotate(90deg)';
+        document.body.style.transformOrigin = 'left top';
+        document.body.style.width = '100vh';
+        document.body.style.height = '100vw';
+        document.body.style.overflowX = 'hidden';
+        document.body.style.overflowY = 'auto';
+        document.body.style.position = 'absolute';
+        document.body.style.top = '100%';
+        document.body.style.left = '0';
+        document.body.style.zIndex = '1';
+        
+        // ゲームコンテナも調整
         const gameContainer = document.getElementById('game-container');
         if (gameContainer) {
             gameContainer.style.width = '100vh';
             gameContainer.style.height = '100vw';
+            gameContainer.style.background = 'transparent';
+            gameContainer.style.position = 'relative';
+            gameContainer.style.zIndex = '2';
         }
+    } catch (error) {
+        console.error('Error applying landscape transform:', error);
+    }
+}
+
+// 横向き変換を解除する関数
+function removeLandscapeTransform() {
+    try {
+        // 背景色を元に戻す
+        document.body.style.background = '';
+        document.body.style.backgroundSize = '';
+        document.body.style.color = '';
         
-        // UIパネルの高さ調整
-        const uiPanel = document.getElementById('ui-panel');
-        if (uiPanel) {
-            const panelHeight = Math.min(screenHeight * 0.4, 200);
-            uiPanel.style.maxHeight = `${panelHeight}px`;
-        }
+        // 横向き変換を解除
+        document.body.style.transform = '';
+        document.body.style.width = '';
+        document.body.style.height = '';
+        document.body.style.overflowX = '';
+        document.body.style.overflowY = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.zIndex = '';
         
-        // インベントリの高さ調整
-        const inventoryItems = document.getElementById('inventory-items');
-        if (inventoryItems) {
-            const inventoryHeight = Math.min(screenHeight * 0.15, 80);
-            inventoryItems.style.maxHeight = `${inventoryHeight}px`;
+        // ゲームコンテナも元に戻す
+        const gameContainer = document.getElementById('game-container');
+        if (gameContainer) {
+            gameContainer.style.width = '';
+            gameContainer.style.height = '';
+            gameContainer.style.background = '';
+            gameContainer.style.position = '';
+            gameContainer.style.zIndex = '';
         }
+    } catch (error) {
+        console.error('Error removing landscape transform:', error);
+    }
+}
+
+// 画面サイズに応じてレイアウトを動的調整する関数
+function adjustLayoutForScreenSize() {
+    try {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
         
-        // メッセージエリアの高さ調整
-        const messageArea = document.getElementById('message-area');
-        if (messageArea) {
-            const messageHeight = Math.min(screenHeight * 0.2, 120);
-            messageArea.style.maxHeight = `${messageHeight}px`;
+        // スマホサイズの場合
+        if (screenWidth < 768) {
+            // ゲームコンテナのサイズ調整
+            const gameContainer = document.getElementById('game-container');
+            if (gameContainer) {
+                gameContainer.style.width = '100vh';
+                gameContainer.style.height = '100vw';
+            }
+            
+            // UIパネルの高さ調整
+            const uiPanel = document.getElementById('ui-panel');
+            if (uiPanel) {
+                const panelHeight = Math.min(screenHeight * 0.4, 200);
+                uiPanel.style.maxHeight = `${panelHeight}px`;
+            }
+            
+            // インベントリの高さ調整
+            const inventoryItems = document.getElementById('inventory-items');
+            if (inventoryItems) {
+                const inventoryHeight = Math.min(screenHeight * 0.15, 80);
+                inventoryItems.style.maxHeight = `${inventoryHeight}px`;
+            }
+            
+            // メッセージエリアの高さ調整
+            const messageArea = document.getElementById('message-area');
+            if (messageArea) {
+                const messageHeight = Math.min(screenHeight * 0.2, 120);
+                messageArea.style.maxHeight = `${messageHeight}px`;
+            }
+            
+            // 部屋移動ボタンの高さ調整
+            const roomNavButtons = document.getElementById('room-nav-buttons');
+            if (roomNavButtons) {
+                const navHeight = Math.min(screenHeight * 0.1, 60);
+                roomNavButtons.style.maxHeight = `${navHeight}px`;
+            }
+            
+            // パズル画面の位置調整
+            const puzzleDiscoveryChance = document.getElementById('puzzle-discovery-chance');
+            if (puzzleDiscoveryChance) {
+                const topPosition = Math.max(screenHeight * 0.1, 40);
+                puzzleDiscoveryChance.style.top = `${topPosition}px`;
+            }
+            
+            // ストーリー通知の位置調整
+            const storyNotification = document.getElementById('story-notification');
+            if (storyNotification) {
+                const bottomPosition = Math.max(screenHeight * 0.02, 5);
+                storyNotification.style.bottom = `${bottomPosition}px`;
+            }
         }
-        
-        // 部屋移動ボタンの高さ調整
-        const roomNavButtons = document.getElementById('room-nav-buttons');
-        if (roomNavButtons) {
-            const navHeight = Math.min(screenHeight * 0.1, 60);
-            roomNavButtons.style.maxHeight = `${navHeight}px`;
-        }
-        
-        // パズル画面の位置調整
-        const puzzleDiscoveryChance = document.getElementById('puzzle-discovery-chance');
-        if (puzzleDiscoveryChance) {
-            const topPosition = Math.max(screenHeight * 0.1, 40);
-            puzzleDiscoveryChance.style.top = `${topPosition}px`;
-        }
-        
-        // ストーリー通知の位置調整
-        const storyNotification = document.getElementById('story-notification');
-        if (storyNotification) {
-            const bottomPosition = Math.max(screenHeight * 0.02, 5);
-            storyNotification.style.bottom = `${bottomPosition}px`;
-        }
+    } catch (error) {
+        console.error('Error adjusting layout:', error);
     }
 }
 
