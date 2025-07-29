@@ -456,8 +456,82 @@ function enableGameUI() {
 
 // 初期化
 document.addEventListener('DOMContentLoaded', () => {
+    // スマホの向きを横向きに固定
+    lockOrientationToLandscape();
     initializeGame();
 });
+
+// スマホの向きを横向きに固定する関数
+function lockOrientationToLandscape() {
+    // 画面の向きを横向きに固定
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {
+            console.log('Orientation lock not supported');
+        });
+    }
+    
+    // iOS Safari用の向き固定
+    if (window.orientation !== undefined) {
+        // 縦向きの場合は画面を回転
+        if (window.orientation === 0 || window.orientation === 180) {
+            document.body.style.transform = 'rotate(90deg)';
+            document.body.style.transformOrigin = 'left top';
+            document.body.style.width = '100vh';
+            document.body.style.height = '100vw';
+            document.body.style.overflowX = 'hidden';
+            document.body.style.overflowY = 'auto';
+            document.body.style.position = 'absolute';
+            document.body.style.top = '100%';
+            document.body.style.left = '0';
+        }
+    }
+    
+    // 画面の向き変更を監視
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+            if (window.orientation === 0 || window.orientation === 180) {
+                // 縦向きになった場合は横向きに強制回転
+                document.body.style.transform = 'rotate(90deg)';
+                document.body.style.transformOrigin = 'left top';
+                document.body.style.width = '100vh';
+                document.body.style.height = '100vw';
+                document.body.style.overflowX = 'hidden';
+                document.body.style.overflowY = 'auto';
+                document.body.style.position = 'absolute';
+                document.body.style.top = '100%';
+                document.body.style.left = '0';
+            } else {
+                // 横向きの場合は通常表示
+                document.body.style.transform = '';
+                document.body.style.width = '';
+                document.body.style.height = '';
+                document.body.style.overflowX = '';
+                document.body.style.overflowY = '';
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.left = '';
+            }
+        }, 100);
+    });
+    
+    // リサイズ時の処理
+    window.addEventListener('resize', () => {
+        if (window.innerWidth < 768) {
+            // スマホサイズの場合、横向き固定を適用
+            if (window.orientation === 0 || window.orientation === 180) {
+                document.body.style.transform = 'rotate(90deg)';
+                document.body.style.transformOrigin = 'left top';
+                document.body.style.width = '100vh';
+                document.body.style.height = '100vw';
+                document.body.style.overflowX = 'hidden';
+                document.body.style.overflowY = 'auto';
+                document.body.style.position = 'absolute';
+                document.body.style.top = '100%';
+                document.body.style.left = '0';
+            }
+        }
+    });
+}
 
 function initializeGame() {
     // DOM要素を取得（存在するもののみ）

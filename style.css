@@ -1225,8 +1225,26 @@ body {
     }
 }
 
-/* より小さいスマホ用 */
-@media (max-width: 480px) {
+/* スマホ版の横向き固定とサイズ調整 */
+@media (max-width: 768px) {
+    /* 横向き固定 */
+    body {
+        transform: rotate(90deg);
+        transform-origin: left top;
+        width: 100vh;
+        height: 100vw;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: absolute;
+        top: 100%;
+        left: 0;
+    }
+    
+    #game-container {
+        width: 100vh;
+        height: 100vw;
+    }
+    
     .title {
         font-size: 2rem;
     }
@@ -1235,44 +1253,73 @@ body {
         font-size: 0.9rem;
     }
     
+    .game-instructions {
+        padding: 10px;
+        margin-bottom: 1rem;
+        max-width: 80vh;
+    }
+    
+    .game-instructions h3 {
+        font-size: 1rem;
+    }
+    
+    .instructions-content {
+        font-size: 0.8rem;
+    }
+    
     .game-btn {
-        padding: 10px 15px;
+        padding: 8px 15px;
         font-size: 0.9rem;
     }
     
+    #game-area {
+        flex-direction: row;
+    }
+    
     #room-container {
-        min-height: 55%;
+        flex: 2;
+        min-height: auto;
+        margin: 3px;
     }
     
     #ui-panel {
-        height: 45%;
+        flex: 1;
+        height: auto;
+        margin: 3px;
         padding: 10px;
     }
     
     #inventory-items {
         grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
+        gap: 5px;
+        max-height: 80px;
     }
     
     .inventory-item {
-        min-height: 50px;
-        font-size: 0.75rem;
+        min-height: 40px;
+        font-size: 0.7rem;
         padding: 4px;
     }
     
     .control-btn {
         font-size: 0.8rem;
-        padding: 6px 10px;
-        min-width: 60px;
+        padding: 6px 8px;
+        min-width: 50px;
     }
     
     #message-area {
-        max-height: 120px;
-        padding: 10px;
+        max-height: 80px;
+        padding: 8px;
     }
     
     #message-text {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+    }
+    
+    #discovery-chance-display {
+        padding: 6px 10px;
+        right: 3px;
+        top: 3px;
     }
     
     #discovery-chance {
@@ -1280,25 +1327,28 @@ body {
     }
     
     #current-room-display {
-        font-size: 0.75rem;
+        top: 3px;
+        left: 3px;
         padding: 4px 8px;
+        font-size: 0.7rem;
     }
     
     .interactive-object {
-        min-width: 40px;
-        min-height: 25px;
-        font-size: 0.65rem;
+        min-width: 35px;
+        min-height: 20px;
+        font-size: 0.6rem;
     }
     
     .direction-arrow {
-        width: 50px;
-        height: 50px;
-        font-size: 35px;
+        width: 40px;
+        height: 40px;
+        font-size: 25px;
     }
     
     #puzzle-container {
         padding: 15px;
-        margin-top: 50px;
+        margin-top: 40px;
+        max-width: 80vh;
     }
     
     #puzzle-title {
@@ -1310,23 +1360,23 @@ body {
     }
     
     #puzzle-answer {
-        padding: 10px;
+        padding: 8px;
         font-size: 0.9rem;
     }
     
     .choice-option {
-        padding: 10px 12px;
-        font-size: 0.85rem;
+        padding: 8px 10px;
+        font-size: 0.8rem;
     }
     
     .pattern-cell {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
         font-size: 1rem;
     }
     
     #pattern-grid {
-        max-width: 200px;
+        max-width: 180px;
         padding: 10px;
         gap: 3px;
     }
@@ -1341,7 +1391,8 @@ body {
     
     #story-notification {
         bottom: 5px;
-        padding: 12px;
+        padding: 10px;
+        max-width: 80vh;
     }
     
     #story-content {
@@ -1349,97 +1400,274 @@ body {
     }
     
     #room-navigation {
-        padding: 8px 6px;
-    }
-    
-    #room-nav-buttons {
-        max-height: 70px;
-    }
-    
-    .room-nav-btn {
-        padding: 5px 5px;
-        font-size: 0.75rem;
-        min-height: 30px;
-    }
-    
-    #puzzle-discovery-chance {
-        width: 280px;
-        left: calc(50% - 140px);
-        font-size: 1.5rem;
-        padding: 12px;
-    }
-}
-
-/* 横向きスマホ対応 */
-@media (max-width: 768px) and (orientation: landscape) {
-    #game-area {
-        flex-direction: row;
-    }
-    
-    #room-container {
-        flex: 2;
-        min-height: auto;
-    }
-    
-    #ui-panel {
-        flex: 1;
-        height: auto;
-    }
-    
-    #inventory-items {
-        grid-template-columns: repeat(3, 1fr);
-        max-height: 120px;
-    }
-    
-    #message-area {
-        max-height: 100px;
-    }
-    
-    #room-navigation {
-        margin-top: 10px;
+        padding: 6px 5px;
     }
     
     #room-nav-buttons {
         max-height: 60px;
     }
     
-    .title {
-        font-size: 2rem;
+    .room-nav-btn {
+        padding: 4px 4px;
+        font-size: 0.7rem;
+        min-height: 25px;
     }
     
-    .game-instructions {
-        max-width: 400px;
+    #puzzle-discovery-chance {
+        width: 240px;
+        left: calc(50% - 120px);
+        font-size: 1.3rem;
+        padding: 10px;
     }
+    
+    /* 選択中オブジェクト表示 */
+    #selected-object-display {
+        padding: 6px;
+        margin-bottom: 8px;
+    }
+    
+    #selected-object-display h3 {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+    }
+    
+    #selected-object-info {
+        font-size: 0.8rem;
+        padding: 3px;
+    }
+    
+    /* メッセージエリア */
+    #message-area h3 {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+    
+    /* インベントリ */
+    #inventory h3 {
+        font-size: 1rem;
+        margin-bottom: 6px;
+    }
+    
+    /* 部屋移動 */
+    #room-navigation h3 {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+    }
+}
+
+/* より小さいスマホ用 */
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .game-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    #room-container {
+        min-height: 50%;
+    }
+    
+    #ui-panel {
+        height: 50%;
+        padding: 8px;
+    }
+    
+    #inventory-items {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+        max-height: 70px;
+    }
+    
+    .inventory-item {
+        min-height: 35px;
+        font-size: 0.65rem;
+        padding: 3px;
+    }
+    
+    .control-btn {
+        font-size: 0.7rem;
+        padding: 5px 6px;
+        min-width: 45px;
+    }
+    
+    #message-area {
+        max-height: 70px;
+        padding: 6px;
+    }
+    
+    #message-text {
+        font-size: 0.75rem;
+    }
+    
+    #discovery-chance {
+        font-size: 0.9rem;
+    }
+    
+    #current-room-display {
+        font-size: 0.65rem;
+        padding: 3px 6px;
+    }
+    
+    .interactive-object {
+        min-width: 30px;
+        min-height: 18px;
+        font-size: 0.55rem;
+    }
+    
+    .direction-arrow {
+        width: 35px;
+        height: 35px;
+        font-size: 22px;
+    }
+    
+    #puzzle-container {
+        padding: 12px;
+        margin-top: 35px;
+    }
+    
+    #puzzle-title {
+        font-size: 1.1rem;
+    }
+    
+    #puzzle-content {
+        font-size: 0.8rem;
+    }
+    
+    #puzzle-answer {
+        padding: 6px;
+        font-size: 0.8rem;
+    }
+    
+    .choice-option {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .pattern-cell {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+    
+    #pattern-grid {
+        max-width: 150px;
+        padding: 8px;
+        gap: 2px;
+    }
+    
+    .ending-title, .gameover-title {
+        font-size: 1.6rem;
+    }
+    
+    .ending-text, .gameover-text {
+        font-size: 0.8rem;
+    }
+    
+    #story-notification {
+        bottom: 3px;
+        padding: 8px;
+    }
+    
+    #story-content {
+        font-size: 0.9rem;
+    }
+    
+    #room-navigation {
+        padding: 5px 4px;
+    }
+    
+    #room-nav-buttons {
+        max-height: 50px;
+    }
+    
+    .room-nav-btn {
+        padding: 3px 3px;
+        font-size: 0.65rem;
+        min-height: 22px;
+    }
+    
+    #puzzle-discovery-chance {
+        width: 200px;
+        left: calc(50% - 100px);
+        font-size: 1.1rem;
+        padding: 8px;
+    }
+    
+    /* 選択中オブジェクト表示 */
+    #selected-object-display {
+        padding: 4px;
+        margin-bottom: 6px;
+    }
+    
+    #selected-object-display h3 {
+        font-size: 0.8rem;
+        margin-bottom: 3px;
+    }
+    
+    #selected-object-info {
+        font-size: 0.7rem;
+        padding: 2px;
+    }
+    
+    /* メッセージエリア */
+    #message-area h3 {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+    
+    /* インベントリ */
+    #inventory h3 {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+    
+    /* 部屋移動 */
+    #room-navigation h3 {
+        font-size: 0.8rem;
+        margin-bottom: 5px;
+    }
+}
+
+/* 横向きスマホ対応（既存の設定を削除） */
+@media (max-width: 768px) and (orientation: landscape) {
+    /* 横向き固定のため、この設定は不要 */
 }
 
 /* タッチデバイス用の最適化 */
 @media (hover: none) and (pointer: coarse) {
     .interactive-object {
-        min-width: 60px;
-        min-height: 40px;
+        min-width: 50px;
+        min-height: 35px;
     }
     
     .direction-arrow {
-        width: 70px;
-        height: 70px;
-        font-size: 45px;
+        width: 60px;
+        height: 60px;
+        font-size: 40px;
     }
     
     .game-btn, .control-btn, .room-nav-btn {
-        min-height: 44px; /* タッチターゲットの最小サイズ */
+        min-height: 40px; /* タッチターゲットの最小サイズ */
     }
     
     .inventory-item {
-        min-height: 60px;
+        min-height: 50px;
     }
     
     .choice-option {
-        min-height: 44px;
+        min-height: 40px;
     }
     
     .pattern-cell {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
     }
 }
 
