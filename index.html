@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>闇の館 - 謎解きホラーゲーム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- タイトル画面 -->
+        <div id="title-screen" class="screen active">
+            <h1 class="title">闇の館</h1>
+            <p class="subtitle">謎解きホラーゲーム</p>
+            
+            <div class="game-instructions">
+                <h3>🎮 遊び方</h3>
+                <div class="instructions-content">
+                    <p><strong>目標:</strong> 闇の館から脱出せよ</p>
+                    <p><strong>操作:</strong> 光る物体をクリック → 調べる/使う/ヒントボタンで謎解き</p>
+                    <p><strong>重要:</strong> ミスすると「見つかる確率」が上昇！100%で即ゲームオーバー</p>
+                    <p><strong>探索:</strong> 部屋を移動してアイテム収集 → パズルを解いて進行</p>
+                    <p><strong>コツ:</strong> 慎重に行動し、ヒント機能を活用しよう</p>
+                </div>
+            </div>
+            
+            <button id="start-btn" class="game-btn">ゲーム開始</button>
+            <div class="warning">※音が出ます。音量にご注意ください。</div>
+        </div>
+
+        <!-- ゲーム画面 -->
+        <div id="game-screen" class="screen">
+            <!-- ストーリー通知用オーバーレイ -->
+            <div id="story-overlay"></div>
+            <div id="game-area">
+                <div id="room-container">
+                    <div id="current-room-display">
+                        <span>現在の部屋: 玄関ホール</span>
+                        <div id="audio-controls">
+                            <button id="mute-all-btn" class="audio-btn" title="全音声ミュート">🔊</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 見つかる確率表示（右上） -->
+                    <div id="discovery-chance-display">
+                        <span id="discovery-chance">👁️ 見つかる: 0%</span>
+                    </div>
+                    <div id="room-image"></div>
+                    <div id="interactive-objects"></div>
+                    
+                    <!-- 方向矢印 -->
+                    <div id="direction-arrows">
+                                    <div class="direction-arrow arrow-up" id="arrow-up">▲</div>
+            <div class="direction-arrow arrow-down" id="arrow-down">▼</div>
+            <div class="direction-arrow arrow-left" id="arrow-left">◀</div>
+            <div class="direction-arrow arrow-right" id="arrow-right">▶</div>
+                        <div id="arrow-tooltip" class="arrow-tooltip"></div>
+                    </div>
+                </div>
+                
+                <div id="ui-panel">
+                    <div id="inventory">
+                        <h3>持ち物</h3>
+                        <div id="inventory-items"></div>
+                        
+                        <!-- コントロールボタンを持ち物の下に移動 -->
+                        <div id="controls">
+                            <button class="control-btn" onclick="playButtonClickSound(); examineObject()">調べる</button>
+                            <button class="control-btn" onclick="playButtonClickSound(); useItem()">使う</button>
+                            <button class="control-btn" onclick="playButtonClickSound(); showHint()">ヒント</button>
+                        </div>
+                    </div>
+                    
+                    <div id="message-area">
+                        <h3>📝 ログ</h3>
+                        <div id="message-text"></div>
+                    </div>
+                    
+                    <!-- 選択中オブジェクト表示 -->
+                    <div id="selected-object-display">
+                        <h3>選択中</h3>
+                        <div id="selected-object-info">何も選択されていません</div>
+                    </div>
+                    
+                    <!-- 部屋移動 -->
+                    <div id="room-navigation">
+                        <h3>部屋移動</h3>
+                        <div id="room-nav-buttons"></div>
+                    </div>
+                </div>
+                
+                <!-- ストーリー表示エリア（ゲーム画面下部） -->
+                <div id="story-notification" class="hidden">
+                    <div id="story-content"></div>
+                    <button id="close-story" onclick="closeStoryNotification()">✕ 閉じる</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- パズル画面 -->
+        <div id="puzzle-screen" class="screen">
+            <!-- 見つかる確率表示（パズル画面用） -->
+            <div id="puzzle-discovery-chance">
+                👁️ 見つかる: 0%
+            </div>
+            <div id="puzzle-container">
+                <div id="puzzle-title"></div>
+                <div id="puzzle-content"></div>
+                
+                <!-- テキスト入力パズル -->
+                <div id="puzzle-input" class="puzzle-input-type">
+                    <input type="text" id="puzzle-answer" placeholder="答えを入力...">
+                    <button id="submit-answer" class="game-btn">決定</button>
+                    <button id="close-puzzle" class="game-btn secondary">閉じる</button>
+                </div>
+                
+                <!-- 選択問題パズル -->
+                <div id="puzzle-choice" class="puzzle-input-type">
+                    <div id="choice-options"></div>
+                    <button id="close-puzzle-choice" class="game-btn secondary" onclick="closePuzzle()">閉じる</button>
+                </div>
+                
+                <!-- パターンパズル -->
+                <div id="puzzle-pattern" class="puzzle-input-type">
+                    <div id="pattern-grid"></div>
+                    <button id="submit-pattern" class="game-btn" onclick="submitPatternAnswer()">決定</button>
+                    <button id="close-puzzle-pattern" class="game-btn secondary" onclick="closePuzzle()">閉じる</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- エンディング画面 -->
+        <div id="ending-screen" class="screen">
+            <h1 class="ending-title">脱出成功！</h1>
+            <p class="ending-text">あなたは闇の館から無事に脱出しました。</p>
+            <p class="ending-text">しかし、この体験は本当に夢だったのでしょうか...？</p>
+            <button id="restart-btn" class="game-btn">もう一度遊ぶ</button>
+        </div>
+
+        <!-- ゲームオーバー画面 -->
+        <div id="gameover-screen" class="screen">
+            <h1 class="gameover-title">GAME OVER</h1>
+            <p class="gameover-text">あなたは見つかってしまいました...</p>
+            <button id="retry-btn" class="game-btn">やり直す</button>
+        </div>
+    </div>
+
+    <!-- 背景音楽用 -->
+    <audio id="bgm" loop>
+        <!-- Web Audio APIで生成 -->
+    </audio>
+
+    <script src="script.js"></script>
+    
+    <!-- ジャンプスケア用オーバーレイ -->
+    <div id="jumpscare-overlay">
+      <img id="jumpscare-img" src="images/gameover_scare.png" alt="jumpscare" />
+    </div>
+</body>
+</html> 

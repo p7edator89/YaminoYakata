@@ -1,0 +1,1803 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', 'Yu Gothic', 'MS PGothic', sans-serif;
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a, #0f0f0f);
+    background-size: 400% 400%;
+    animation: backgroundShift 10s ease-in-out infinite;
+    color: #cccccc;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+    height: 100vh;
+}
+
+@keyframes backgroundShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.screen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* タイトル画面 */
+#title-screen {
+    background: radial-gradient(circle, rgba(20,0,0,0.9) 0%, rgba(0,0,0,1) 70%);
+    text-align: center;
+}
+
+.title {
+    font-size: 4rem;
+    color: #ff4444;
+    text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+    animation: flicker 2s infinite alternate;
+    margin-bottom: 1rem;
+}
+
+@keyframes flicker {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.8; }
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #cccccc;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px #ffffff;
+}
+
+.game-instructions {
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid #444444;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    text-align: left;
+}
+
+.game-instructions h3 {
+    color: #ff6666;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    text-align: center;
+    text-shadow: 0 0 10px #ff4444;
+}
+
+.instructions-content {
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.instructions-content p {
+    margin-bottom: 8px;
+    color: #cccccc;
+}
+
+.instructions-content strong {
+    color: #ffffff;
+    text-shadow: 0 0 5px #ffffff;
+}
+
+.warning {
+    position: absolute;
+    bottom: 2rem;
+    font-size: 0.9rem;
+    color: #888888;
+}
+
+/* ボタン */
+.game-btn {
+    background: linear-gradient(45deg, #330000, #660000);
+    border: 2px solid #ff4444;
+    color: #ffffff;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', 'Yu Gothic', 'MS PGothic', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    margin: 10px;
+}
+
+.game-btn:hover {
+    background: linear-gradient(45deg, #660000, #990000);
+    box-shadow: 0 0 20px #ff4444;
+    transform: scale(1.05);
+}
+
+.game-btn.secondary {
+    background: linear-gradient(45deg, #1a1a1a, #0a0a0a);
+    border-color: #444444;
+}
+
+.game-btn.secondary:hover {
+    background: linear-gradient(45deg, #1a1a1a, #0a0a0a);
+    box-shadow: 0 0 20px #444444;
+}
+
+/* 問題のある場所のボタン（赤色） */
+.game-btn.problematic {
+    background: linear-gradient(45deg, #660000, #990000);
+    border: 2px solid #ff6666;
+    color: #ffffff;
+    box-shadow: 0 0 15px #ff4444;
+}
+
+.game-btn.problematic:hover {
+    background: linear-gradient(45deg, #990000, #cc0000);
+    box-shadow: 0 0 25px #ff6666;
+    transform: scale(1.05);
+}
+
+/* ゲーム画面 */
+#game-screen {
+    justify-content: flex-start;
+    align-items: stretch;
+    background: rgba(0,0,0,0.9);
+}
+
+#game-area {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+#room-container {
+    flex: 2;
+    position: relative;
+    background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+    border: 3px solid #444444;
+    margin: 10px;
+    overflow: hidden;
+}
+
+#current-room-display {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid #444444;
+    font-size: 0.9rem;
+    font-weight: bold;
+    z-index: 10;
+    text-shadow: 0 0 5px #000000;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#audio-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.audio-btn {
+    background: rgba(50, 50, 50, 0.8);
+    border: 1px solid #888888;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    min-width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 見つかる確率表示（右上） */
+#discovery-chance-display {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #444444;
+    border-radius: 8px;
+    padding: 12px 20px;
+    z-index: 15;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+#discovery-chance {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 8px #ffffff;
+    transition: all 0.3s ease;
+}
+
+.audio-btn:hover {
+    background: rgba(70, 70, 70, 0.9);
+    border-color: #aaaaaa;
+    transform: scale(1.1);
+}
+
+.audio-btn.muted {
+    background: rgba(100, 50, 50, 0.8);
+    border-color: #ff6666;
+    color: #ff9999;
+}
+
+#room-image {
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(135deg, #2a2a2a 0%, #0a0a0a 50%, #1a1a1a 100%);
+    position: relative;
+}
+
+#room-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.02) 50%, transparent 100%);
+    animation: lightSweep 8s infinite linear;
+}
+
+@keyframes lightSweep {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+#interactive-objects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.interactive-object {
+    position: absolute;
+    min-width: 60px;           /* 可変サイズ (幅下限) */
+    min-height: 36px;          /* 可変サイズ (高さ下限) */
+    background: rgba(255, 255, 255, 0.05); /* ほぼ透過で床を透かす */
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 6px;
+    cursor: pointer;
+    pointer-events: all;
+    animation: pulseRect 3s infinite;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 0.75rem;
+    text-align: center;
+    text-shadow: 0 0 6px rgba(0,0,0,0.7);
+    padding: 2px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: visible;
+}
+
+/* パズル（赤い場所）は赤みを帯びた枠線で差別化 */
+.interactive-object.quiz-location {
+    border-color: rgba(255, 120, 120, 0.9);
+    box-shadow: 0 0 14px rgba(255, 90, 90, 0.6);
+    background: rgba(120, 0, 0, 0.08);
+}
+
+.interactive-object:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.55);
+    animation-play-state: paused;
+}
+
+.interactive-object.quiz-location:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 20px rgba(255, 90, 90, 0.8);
+    animation-play-state: paused;
+}
+
+.interactive-object.selected {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #ffffff;
+    box-shadow: 0 0 25px #ffffff, 0 0 55px rgba(255, 255, 255, 0.9);
+    transform: scale(1.1);
+    animation: selectedPulseRectBright 1s infinite;
+}
+
+.interactive-object.selected:hover {
+    transform: scale(1.14);
+}
+
+@keyframes pulseRect {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+@keyframes selectedPulseRectBright {
+    0%, 100% { opacity: 1; box-shadow: 0 0 25px #ffffff, 0 0 55px rgba(255, 255, 255, 0.9); }
+    50% { opacity: 0.6; box-shadow: 0 0 10px #ffffff, 0 0 25px rgba(255, 255, 255, 0.5); }
+}
+
+#ui-panel {
+    flex: 1;
+    background: rgba(20,20,20,0.9);
+    border: 3px solid #444444;
+    margin: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+#inventory {
+    flex: 1;
+    border-bottom: 2px solid #333333;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+#inventory h3 {
+    color: #ff8844;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 持ち物エリアの古いスタイルは削除 */
+
+#discovery-chance.danger-safe {
+    color: #ffffff;
+    text-shadow: 0 0 8px #ffffff;
+    animation: none;
+}
+
+#discovery-chance.danger-low {
+    color: #ffeeaa;
+    text-shadow: 0 0 10px #ffeeaa;
+    animation: pulse-yellow 3s infinite, shake-light 2.5s infinite;
+}
+
+#discovery-chance.danger-medium {
+    color: #ffaa44;
+    text-shadow: 0 0 12px #ffaa44;
+    animation: pulse-orange 2s infinite, shake-medium 2s infinite;
+}
+
+#discovery-chance.danger-high {
+    color: #ff6644;
+    text-shadow: 0 0 15px #ff6644;
+    animation: pulse-red 1.5s infinite, shake-medium 1.3s infinite;
+}
+
+#discovery-chance.danger-critical {
+    color: #ff2222;
+    text-shadow: 0 0 18px #ff2222;
+    animation: pulse-critical 1s infinite, shake-heavy 0.9s infinite;
+}
+
+#discovery-chance.danger-extreme {
+    color: #ff0000;
+    text-shadow: 0 0 25px #ff0000;
+    animation: pulse-extreme 0.5s infinite, shake-extreme 0.4s infinite;
+}
+
+@keyframes pulse-yellow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+@keyframes pulse-orange {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes pulse-red {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes pulse-critical {
+    0%, 100% { opacity: 1; box-shadow: 0 0 15px currentColor; }
+    50% { opacity: 0.5; box-shadow: 0 0 25px currentColor; }
+}
+
+@keyframes pulse-extreme {
+    0%, 100% { opacity: 1; box-shadow: 0 0 20px currentColor; }
+    25% { opacity: 0.3; box-shadow: 0 0 35px currentColor; }
+    75% { opacity: 0.3; box-shadow: 0 0 35px currentColor; }
+}
+
+/* 揺れアニメーション - 段階的に強くなる */
+@keyframes shake-light {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-0.5px); }
+    40% { transform: translateX(0.5px); }
+    60% { transform: translateX(-1px); }
+    80% { transform: translateX(1px); }
+}
+
+@keyframes shake-medium {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    12.5% { transform: translateX(-1px) translateY(-0.5px); }
+    25% { transform: translateX(1px) translateY(0.5px); }
+    37.5% { transform: translateX(-1.5px) translateY(-1px); }
+    50% { transform: translateX(1.5px) translateY(1px); }
+    62.5% { transform: translateX(-2px) translateY(-0.5px); }
+    75% { transform: translateX(2px) translateY(1px); }
+    87.5% { transform: translateX(-1px) translateY(-1px); }
+}
+
+@keyframes shake-heavy {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    8% { transform: translateX(-2px) translateY(-1px); }
+    16% { transform: translateX(2px) translateY(1px); }
+    24% { transform: translateX(-2.5px) translateY(-1.5px); }
+    32% { transform: translateX(2.5px) translateY(1.5px); }
+    40% { transform: translateX(-3px) translateY(-2px); }
+    48% { transform: translateX(3px) translateY(2px); }
+    56% { transform: translateX(-3.5px) translateY(-1px); }
+    64% { transform: translateX(3.5px) translateY(1px); }
+    72% { transform: translateX(-3px) translateY(-2px); }
+    80% { transform: translateX(3px) translateY(2px); }
+    88% { transform: translateX(-2px) translateY(-1px); }
+    96% { transform: translateX(2px) translateY(1px); }
+}
+
+@keyframes shake-extreme {
+    0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+    5% { transform: translateX(-3px) translateY(-2px) rotate(-0.5deg); }
+    10% { transform: translateX(3px) translateY(2px) rotate(0.5deg); }
+    15% { transform: translateX(-4px) translateY(-3px) rotate(-1deg); }
+    20% { transform: translateX(4px) translateY(3px) rotate(1deg); }
+    25% { transform: translateX(-5px) translateY(-2px) rotate(-1.5deg); }
+    30% { transform: translateX(5px) translateY(2px) rotate(1.5deg); }
+    35% { transform: translateX(-6px) translateY(-4px) rotate(-2deg); }
+    40% { transform: translateX(6px) translateY(4px) rotate(2deg); }
+    45% { transform: translateX(-7px) translateY(-3px) rotate(-1.5deg); }
+    50% { transform: translateX(7px) translateY(3px) rotate(1.5deg); }
+    55% { transform: translateX(-6px) translateY(-4px) rotate(-2deg); }
+    60% { transform: translateX(6px) translateY(4px) rotate(2deg); }
+    65% { transform: translateX(-5px) translateY(-2px) rotate(-1deg); }
+    70% { transform: translateX(5px) translateY(2px) rotate(1deg); }
+    75% { transform: translateX(-4px) translateY(-3px) rotate(-0.5deg); }
+    80% { transform: translateX(4px) translateY(3px) rotate(0.5deg); }
+    85% { transform: translateX(-3px) translateY(-2px) rotate(-1deg); }
+    90% { transform: translateX(3px) translateY(2px) rotate(1deg); }
+    95% { transform: translateX(-2px) translateY(-1px) rotate(-0.5deg); }
+}
+
+#inventory-items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-height: 240px; /* 約3行分の高さ（3列×3行=9アイテム表示） */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px; /* スクロールバー用の余白 */
+}
+
+.inventory-item {
+    background: #333333;
+    border: 2px solid #666666;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    flex-direction: column;
+}
+
+.inventory-item:hover {
+    border-color: #ff8844;
+    background: #444444;
+}
+
+.inventory-item.selected {
+    background: #664422;
+    border-color: #ff8844;
+}
+
+#message-area {
+    flex: 3; /* 6割 */
+    background: #111111;
+    border: 2px solid #333333;
+    padding: 15px;
+    margin-bottom: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#message-text {
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #cccccc;
+}
+
+/* 選択中オブジェクト表示 */
+#selected-object-display {
+    background: rgba(20, 20, 20, 0.3);
+    border: 2px solid #555555;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+#selected-object-display h3 {
+    color: #ffffff;
+    margin-bottom: 8px;
+    font-size: 1rem;
+    text-shadow: none;
+}
+
+#selected-object-info {
+    color: #ffffff;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 5px;
+    background: #2a2a2a;
+    border-radius: 4px;
+    border: 1px solid #000000;
+}
+
+#controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #444444;
+}
+
+.control-btn {
+    background: #222222;
+    border: 2px solid #555555;
+    color: #ffffff;
+    padding: 10px 15px;
+    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', 'Yu Gothic', 'MS PGothic', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 80px;
+}
+
+.control-btn:hover {
+    background: #333333;
+    border-color: #777777;
+}
+
+.control-btn:disabled {
+    background: #111111;
+    border-color: #333333;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+/* 問題のある場所のコントロールボタン（赤色） */
+.control-btn.problematic {
+    background: linear-gradient(45deg, #660000, #990000);
+    border: 2px solid #ff6666;
+    color: #ffffff;
+    box-shadow: 0 0 15px #ff4444;
+}
+
+.control-btn.problematic:hover {
+    background: linear-gradient(45deg, #990000, #cc0000);
+    box-shadow: 0 0 25px #ff6666;
+    transform: scale(1.05);
+}
+
+/* 方向矢印 */
+#direction-arrows {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.direction-arrow {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: none;
+    color: #888888;
+    font-size: 48px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: all;
+    transition: all 0.3s ease;
+    opacity: 0;
+    z-index: 5;
+    text-shadow: 0 0 15px rgba(136, 136, 136, 0.8), 0 0 30px rgba(136, 136, 136, 0.6);
+    transform-origin: center center;
+}
+
+.direction-arrow.visible {
+    opacity: 1;
+}
+
+.direction-arrow:hover {
+    color: #bbbbbb;
+    text-shadow: 0 0 20px rgba(187, 187, 187, 1), 0 0 40px rgba(136, 136, 136, 0.8);
+    filter: brightness(1.3);
+}
+
+.direction-arrow.disabled {
+    color: #444444;
+    cursor: not-allowed;
+    text-shadow: none;
+}
+
+.direction-arrow.disabled:hover {
+    transform: none;
+    box-shadow: none;
+    color: #666666;
+    text-shadow: 0 0 5px rgba(102, 102, 102, 0.5);
+}
+
+/* 各方向の矢印位置 */
+.arrow-up {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.arrow-up:hover {
+    transform: translateX(-50%) scale(1.3);
+}
+
+.arrow-down {
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.arrow-down:hover {
+    transform: translateX(-50%) scale(1.3);
+}
+
+.arrow-left {
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+}
+
+.arrow-left:hover {
+    transform: translateY(-50%) scale(1.3);
+}
+
+.arrow-right {
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+.arrow-right:hover {
+    transform: translateY(-50%) scale(1.3);
+}
+
+/* 矢印用カスタムツールチップ */
+.arrow-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.85);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
+    text-shadow: none;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+.arrow-tooltip.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 移動可能 */
+.arrow-tooltip.accessible {
+    color: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* 移動不可 */
+.arrow-tooltip.blocked {
+    color: #888888;
+    border-color: #888888;
+    box-shadow: 0 0 20px rgba(136, 136, 136, 0.4);
+}
+
+/* パズル画面 */
+#puzzle-screen {
+    background: rgba(0,0,0,0.95);
+}
+
+#puzzle-container {
+    position: relative; /* 子要素の絶対位置の基準点に設定 */
+    background: linear-gradient(135deg, #220000, #110000);
+    border: 3px solid #ff4444;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255,68,68,0.5);
+    margin-top: 80px; /* 見つかる％表示のスペースを確保 */
+}
+
+/* パズル画面用見つかる確率表示 */
+#puzzle-discovery-chance {
+    position: fixed; /* フレームサイズに関係なく画面基準で配置 */
+    top: 50%; /* 初期位置（JavaScriptで動的調整） */
+    left: calc(50% - 160px); /* 画面中央から要素幅の半分を引いた位置 */
+    padding: 15px; /* パディングを統一 */
+    background: linear-gradient(135deg, #1a0000, #2a0000);
+    border: 2px solid #ff4444;
+    border-radius: 10px; /* 角を少し丸く */
+    box-shadow: 0 0 25px rgba(255, 68, 68, 0.4); /* シャドウを強く */
+    z-index: 10;
+    width: 320px; /* 固定幅で位置ずれを完全防止 */
+    text-align: center; /* テキスト中央揃え */
+    white-space: nowrap; /* テキストの改行を防ぐ */
+    font-size: 1.8rem; /* フォントサイズを直接指定 */
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    font-family: 'Courier New', 'MS Gothic', monospace; /* 等幅フォントで位置固定 */
+    letter-spacing: 0.05em; /* 文字間隔を微調整 */
+    display: flex; /* フレックスボックスで完全中央揃え */
+    align-items: center; /* 垂直中央揃え */
+    justify-content: center; /* 水平中央揃え */
+}
+
+/* 不要になったテキスト用スタイルを削除 */
+
+/* パズル画面用見つかる確率の危険度表示 */
+#puzzle-discovery-chance.danger-safe {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+    animation: none;
+}
+
+#puzzle-discovery-chance.danger-low {
+    color: #ffeeaa;
+    text-shadow: 0 0 12px #ffeeaa;
+    animation: pulse-yellow 3s infinite, shake-light 2.5s infinite;
+}
+
+#puzzle-discovery-chance.danger-medium {
+    color: #ffaa44;
+    text-shadow: 0 0 14px #ffaa44;
+    animation: pulse-orange 2s infinite, shake-medium 2s infinite;
+}
+
+#puzzle-discovery-chance.danger-high {
+    color: #ff6644;
+    text-shadow: 0 0 16px #ff6644;
+    animation: pulse-red 1.5s infinite, shake-medium 1.3s infinite;
+}
+
+#puzzle-discovery-chance.danger-critical {
+    color: #ff2222;
+    text-shadow: 0 0 20px #ff2222;
+    animation: pulse-critical 1s infinite, shake-heavy 0.9s infinite;
+}
+
+#puzzle-discovery-chance.danger-extreme {
+    color: #ff0000;
+    text-shadow: 0 0 28px #ff0000;
+    animation: pulse-extreme 0.5s infinite, shake-extreme 0.4s infinite;
+}
+
+#puzzle-title {
+    font-size: 1.8rem;
+    color: #ff6666;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #ff0000;
+}
+
+#puzzle-content {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    color: #dddddd;
+    text-align: center;
+    white-space: pre-wrap;
+}
+
+#puzzle-input {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+#puzzle-answer {
+    background: #111111;
+    border: 2px solid #666666;
+    color: #ffffff;
+    padding: 15px;
+    font-size: 1.2rem;
+    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', 'Yu Gothic', 'MS PGothic', sans-serif;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+#puzzle-answer:focus {
+    outline: none;
+    border-color: #ff8844;
+    box-shadow: 0 0 10px rgba(255,136,68,0.3);
+}
+
+/* 選択問題パズル */
+#puzzle-choice {
+    text-align: center;
+    display: none;
+}
+
+#choice-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.choice-option {
+    background: #222222;
+    border: 2px solid #555555;
+    color: #ffffff;
+    padding: 15px 20px;
+    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', 'Yu Gothic', 'MS PGothic', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.choice-option:hover {
+    background: #333333;
+    border-color: #777777;
+    transform: translateX(5px);
+}
+
+.choice-option.selected {
+    background: #664422;
+    border-color: #ff8844;
+    box-shadow: 0 0 10px rgba(255, 136, 68, 0.5);
+}
+
+/* パターンパズル */
+#puzzle-pattern {
+    text-align: center;
+    display: none;
+}
+
+#pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    max-width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #111111;
+    border: 2px solid #333333;
+    border-radius: 8px;
+}
+
+.pattern-cell {
+    width: 60px;
+    height: 60px;
+    background: #222222;
+    border: 2px solid #444444;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.pattern-cell:hover {
+    background: #333333;
+    border-color: #666666;
+}
+
+.pattern-cell.active {
+    background: #ff8844;
+    border-color: #ffaa66;
+    color: #000000;
+    box-shadow: 0 0 10px rgba(255, 136, 68, 0.5);
+}
+
+.pattern-cell.correct {
+    background: #44ff44;
+    border-color: #66ff66;
+    color: #000000;
+}
+
+.pattern-cell.incorrect {
+    background: #ff4444;
+    border-color: #ff6666;
+    color: #ffffff;
+}
+
+
+
+/* エンディング・ゲームオーバー画面 */
+#ending-screen, #gameover-screen {
+    text-align: center;
+}
+
+.ending-title {
+    font-size: 3rem;
+    color: #44ff44;
+    text-shadow: 0 0 20px #00ff00;
+    margin-bottom: 2rem;
+}
+
+.ending-text {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #cccccc;
+}
+
+.gameover-title {
+    font-size: 3rem;
+    color: #ff0000;
+    text-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000;
+    margin-bottom: 2rem;
+    animation: terrifyingShake 0.3s infinite, bloodPulse 1s infinite alternate;
+    font-weight: bold;
+}
+
+@keyframes terrifyingShake {
+    0% { transform: translateX(0) translateY(0) scale(1); }
+    10% { transform: translateX(-8px) translateY(-3px) scale(1.02); }
+    20% { transform: translateX(8px) translateY(3px) scale(0.98); }
+    30% { transform: translateX(-6px) translateY(4px) scale(1.01); }
+    40% { transform: translateX(6px) translateY(-4px) scale(0.99); }
+    50% { transform: translateX(-4px) translateY(2px) scale(1.03); }
+    60% { transform: translateX(4px) translateY(-2px) scale(0.97); }
+    70% { transform: translateX(-3px) translateY(5px) scale(1.01); }
+    80% { transform: translateX(3px) translateY(-1px) scale(0.99); }
+    90% { transform: translateX(-2px) translateY(1px) scale(1.02); }
+    100% { transform: translateX(0) translateY(0) scale(1); }
+}
+
+@keyframes bloodPulse {
+    0% { 
+        color: #ff0000; 
+        text-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000;
+        filter: brightness(1);
+    }
+    100% { 
+        color: #800000; 
+        text-shadow: 0 0 20px #800000, 0 0 40px #ff0000, 0 0 80px #ff0000;
+        filter: brightness(1.5);
+    }
+}
+
+.gameover-text {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #cccccc;
+}
+
+#gameover-screen {
+    background: radial-gradient(circle, #000000 0%, #220000 50%, #000000 100%);
+    animation: darkPulse 3s infinite ease-in-out;
+}
+
+@keyframes darkPulse {
+    0%, 100% { 
+        background: radial-gradient(circle, #000000 0%, #220000 50%, #000000 100%);
+        filter: brightness(0.8);
+    }
+    50% { 
+        background: radial-gradient(circle, #110000 0%, #330000 50%, #110000 100%);
+        filter: brightness(1.2);
+    }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .game-instructions {
+        padding: 15px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .game-instructions h3 {
+        font-size: 1.1rem;
+    }
+    
+    .instructions-content {
+        font-size: 0.9rem;
+    }
+    
+    .game-btn {
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+    
+    #game-area {
+        flex-direction: column;
+    }
+    
+    #room-container {
+        flex: 1;
+        min-height: 60%;
+        margin: 5px;
+    }
+    
+    #ui-panel {
+        flex: none;
+        height: 40%;
+        margin: 5px;
+        padding: 15px;
+    }
+    
+    #inventory-items {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .inventory-item {
+        min-height: 60px;
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+    
+    .control-btn {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+        min-width: 70px;
+    }
+    
+    #message-area {
+        max-height: 150px;
+        padding: 12px;
+    }
+    
+    #message-text {
+        font-size: 0.9rem;
+    }
+    
+    #discovery-chance-display {
+        padding: 8px 15px;
+        right: 5px;
+        top: 5px;
+    }
+    
+    #discovery-chance {
+        font-size: 1.2rem;
+    }
+    
+    #current-room-display {
+        top: 5px;
+        left: 5px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .interactive-object {
+        min-width: 50px;
+        min-height: 30px;
+        font-size: 0.7rem;
+    }
+    
+    .direction-arrow {
+        width: 60px;
+        height: 60px;
+        font-size: 40px;
+    }
+    
+    #puzzle-container {
+        padding: 20px;
+        margin-top: 60px;
+    }
+    
+    #puzzle-title {
+        font-size: 1.5rem;
+    }
+    
+    #puzzle-content {
+        font-size: 1rem;
+    }
+    
+    #puzzle-answer {
+        padding: 12px;
+        font-size: 1rem;
+    }
+    
+    .choice-option {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .pattern-cell {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    #pattern-grid {
+        max-width: 250px;
+        padding: 15px;
+    }
+    
+    .ending-title, .gameover-title {
+        font-size: 2rem;
+    }
+    
+    .ending-text, .gameover-text {
+        font-size: 1rem;
+    }
+    
+    #story-notification {
+        bottom: 10px;
+        padding: 15px;
+    }
+    
+    #story-content {
+        font-size: 1.2rem;
+    }
+    
+    #room-navigation {
+        padding: 10px 8px;
+    }
+    
+    #room-nav-buttons {
+        max-height: 80px;
+    }
+    
+    .room-nav-btn {
+        padding: 6px 6px;
+        font-size: 0.8rem;
+        min-height: 35px;
+    }
+    
+    #puzzle-discovery-chance {
+        width: 280px;
+        left: calc(50% - 140px);
+        font-size: 1.5rem;
+        padding: 12px;
+    }
+}
+
+/* より小さいスマホ用 */
+@media (max-width: 480px) {
+    .title {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .game-btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    #room-container {
+        min-height: 55%;
+    }
+    
+    #ui-panel {
+        height: 45%;
+        padding: 10px;
+    }
+    
+    #inventory-items {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    
+    .inventory-item {
+        min-height: 50px;
+        font-size: 0.75rem;
+        padding: 4px;
+    }
+    
+    .control-btn {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+        min-width: 60px;
+    }
+    
+    #message-area {
+        max-height: 120px;
+        padding: 10px;
+    }
+    
+    #message-text {
+        font-size: 0.85rem;
+    }
+    
+    #discovery-chance {
+        font-size: 1rem;
+    }
+    
+    #current-room-display {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+    
+    .interactive-object {
+        min-width: 40px;
+        min-height: 25px;
+        font-size: 0.65rem;
+    }
+    
+    .direction-arrow {
+        width: 50px;
+        height: 50px;
+        font-size: 35px;
+    }
+    
+    #puzzle-container {
+        padding: 15px;
+        margin-top: 50px;
+    }
+    
+    #puzzle-title {
+        font-size: 1.3rem;
+    }
+    
+    #puzzle-content {
+        font-size: 0.9rem;
+    }
+    
+    #puzzle-answer {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .choice-option {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .pattern-cell {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    #pattern-grid {
+        max-width: 200px;
+        padding: 10px;
+        gap: 3px;
+    }
+    
+    .ending-title, .gameover-title {
+        font-size: 1.8rem;
+    }
+    
+    .ending-text, .gameover-text {
+        font-size: 0.9rem;
+    }
+    
+    #story-notification {
+        bottom: 5px;
+        padding: 12px;
+    }
+    
+    #story-content {
+        font-size: 1rem;
+    }
+    
+    #room-navigation {
+        padding: 8px 6px;
+    }
+    
+    #room-nav-buttons {
+        max-height: 70px;
+    }
+    
+    .room-nav-btn {
+        padding: 5px 5px;
+        font-size: 0.75rem;
+        min-height: 30px;
+    }
+    
+    #puzzle-discovery-chance {
+        width: 280px;
+        left: calc(50% - 140px);
+        font-size: 1.5rem;
+        padding: 12px;
+    }
+}
+
+/* 横向きスマホ対応 */
+@media (max-width: 768px) and (orientation: landscape) {
+    #game-area {
+        flex-direction: row;
+    }
+    
+    #room-container {
+        flex: 2;
+        min-height: auto;
+    }
+    
+    #ui-panel {
+        flex: 1;
+        height: auto;
+    }
+    
+    #inventory-items {
+        grid-template-columns: repeat(3, 1fr);
+        max-height: 120px;
+    }
+    
+    #message-area {
+        max-height: 100px;
+    }
+    
+    #room-navigation {
+        margin-top: 10px;
+    }
+    
+    #room-nav-buttons {
+        max-height: 60px;
+    }
+    
+    .title {
+        font-size: 2rem;
+    }
+    
+    .game-instructions {
+        max-width: 400px;
+    }
+}
+
+/* タッチデバイス用の最適化 */
+@media (hover: none) and (pointer: coarse) {
+    .interactive-object {
+        min-width: 60px;
+        min-height: 40px;
+    }
+    
+    .direction-arrow {
+        width: 70px;
+        height: 70px;
+        font-size: 45px;
+    }
+    
+    .game-btn, .control-btn, .room-nav-btn {
+        min-height: 44px; /* タッチターゲットの最小サイズ */
+    }
+    
+    .inventory-item {
+        min-height: 60px;
+    }
+    
+    .choice-option {
+        min-height: 44px;
+    }
+    
+    .pattern-cell {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* 高解像度ディスプレイ対応 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .interactive-object {
+        border-width: 1px;
+    }
+    
+    .game-btn, .control-btn, .room-nav-btn {
+        border-width: 1px;
+    }
+}
+
+/* オブジェクト用ツールチップ */
+.object-tooltip {
+    position: absolute;
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #888888;
+    box-shadow: 0 0 15px rgba(136, 136, 136, 0.5);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    z-index: 15;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+}
+
+.object-tooltip.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.object-tooltip.quiz-location {
+    color: #ffdd00;
+    border-color: #ffdd00;
+    box-shadow: 0 0 20px rgba(255, 221, 0, 0.6), 0 0 40px rgba(255, 221, 0, 0.3);
+    text-shadow: 0 0 10px rgba(255, 221, 0, 0.8);
+}
+
+/* ストーリー表示の修正 */
+#story-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ストーリー通知（ゲーム画面下部） */
+#story-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid #555555;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 800px;
+    width: 90%;
+    z-index: 1000;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.5s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#story-notification.hidden {
+    display: none;
+}
+
+#story-content {
+    color: #cccccc;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+    text-align: center;
+    white-space: pre-wrap;
+    overflow: visible;
+    text-overflow: initial;
+    font-weight: 400;
+    text-shadow: 0 0 15px rgba(204, 204, 204, 0.4);
+    max-width: 100%;
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    padding: 0;
+    width: 100%;
+}
+
+#story-content::after {
+    content: '|';
+    opacity: 1;
+    animation: blink 1s infinite;
+    color: #ffaa00;
+}
+
+#story-content.typing-complete::after {
+    display: none;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+#close-story {
+    background: #333333;
+    border: 2px solid #555555;
+    color: #cccccc;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', 'Yu Gothic', 'MS PGothic', sans-serif;
+    font-size: 1rem;
+    margin-top: 15px;
+    align-self: center;
+    transition: all 0.3s ease;
+}
+
+#close-story:hover {
+    background: #444444;
+    border-color: #777777;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+/* 部屋移動スタイル */
+#room-navigation {
+    flex: 2; /* 4割 */
+    margin-top: 15px;
+    padding: 15px 12px 15px 12px; /* 左右のパディングを調整 */
+    background: rgba(20, 20, 20, 0.3);
+    border: 2px solid #444444;
+    border-radius: 10px;
+}
+
+#room-navigation h3 {
+    color: #cccccc;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    text-shadow: none;
+}
+
+#room-nav-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 90px; /* 2部屋分の高さ（約45px×2）、3部屋目からスクロール */
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0; /* 余白を削除 */
+    padding: 0; /* パディングを削除 */
+}
+
+/* 部屋移動ボタンのスクロールバー（WebKit系ブラウザのみ） */
+#room-nav-buttons::-webkit-scrollbar {
+    width: 6px;
+}
+
+#room-nav-buttons::-webkit-scrollbar-track {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    border-radius: 3px;
+    border: 1px solid #333333;
+}
+
+#room-nav-buttons::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #666666, #444444);
+    border-radius: 3px;
+    border: 1px solid #777777;
+    box-shadow: 0 0 5px rgba(119, 119, 119, 0.3);
+}
+
+#room-nav-buttons::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #777777, #555555);
+    box-shadow: 0 0 8px rgba(119, 119, 119, 0.5);
+}
+
+/* インベントリのスクロールバー（WebKit系ブラウザのみ） */
+#inventory-items::-webkit-scrollbar {
+    width: 6px;
+}
+
+#inventory-items::-webkit-scrollbar-track {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    border-radius: 3px;
+    border: 1px solid #333333;
+}
+
+#inventory-items::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #666666, #444444);
+    border-radius: 3px;
+    border: 1px solid #777777;
+    box-shadow: 0 0 5px rgba(119, 119, 119, 0.3);
+}
+
+#inventory-items::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #777777, #555555);
+    box-shadow: 0 0 8px rgba(119, 119, 119, 0.5);
+}
+
+.room-nav-btn {
+    background: linear-gradient(45deg, #333333, #444444);
+    border: 1px solid #555555;
+    color: #cccccc;
+    padding: 8px 8px; /* 左右のパディングを調整 */
+    font-size: 0.9rem;
+    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Meiryo', 'Yu Gothic', 'MS PGothic', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    text-align: left;
+    flex-shrink: 0;
+    min-height: 40px;
+    width: 100%; /* フレーム幅いっぱいに表示 */
+    box-sizing: border-box; /* ボーダーを含めてサイズ計算 */
+}
+
+.room-nav-btn:hover {
+    background: linear-gradient(45deg, #444444, #555555);
+    border-color: #777777;
+    transform: translateX(5px);
+}
+
+.room-nav-btn.current-room {
+    background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+    border-color: #666666;
+    box-shadow: 0 0 10px rgba(100, 100, 100, 0.3);
+}
+
+.room-nav-btn.current-room:hover {
+    background: linear-gradient(45deg, #3a3a3a, #4a4a4a);
+}
+
+/* メッセージエリアのスクロールバー（WebKit系ブラウザのみ） */
+#message-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+#message-area::-webkit-scrollbar-track {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    border-radius: 4px;
+    border: 1px solid #333333;
+}
+
+#message-area::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #666666, #444444);
+    border-radius: 4px;
+    border: 1px solid #777777;
+    box-shadow: 0 0 5px rgba(119, 119, 119, 0.3);
+}
+
+#message-area::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #777777, #555555);
+    box-shadow: 0 0 8px rgba(119, 119, 119, 0.5);
+}
+
+#message-area::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(135deg, #888888, #666666);
+    box-shadow: 0 0 10px rgba(136, 136, 136, 0.7);
+}
+
+/* 見つかる%の表示スタイル */
+ 
+/* ジャンプスケアオーバーレイ */
+#jumpscare-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.97);
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    animation: jumpscare-fadein 0.18s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+#jumpscare-img {
+    max-width: 80vw;
+    max-height: 80vh;
+    filter: drop-shadow(0 0 40px #fff) brightness(1.2);
+    transform: rotate(90deg) scale(0.3);
+    opacity: 0;
+    transition: none;
+}
+
+#jumpscare-img.show {
+    animation: jumpscare-appear 0.7s cubic-bezier(.68,-0.55,.27,1.55), jumpscare-shake-strong 1.2s 0.7s 1 alternate, jumpscare-flash 1.2s 0.2s 2 alternate;
+    opacity: 1;
+    transform: rotate(90deg) scale(1.25);
+    filter: drop-shadow(0 0 80px #ff0000) brightness(2) contrast(2);
+    transform-origin: center center;
+}
+
+@keyframes jumpscare-fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes jumpscare-zoom {
+    from { transform: scale(0.7); }
+    to   { transform: scale(1.12); }
+}
+
+@keyframes jumpscare-appear {
+    0% { opacity: 0; transform: rotate(90deg) scale(0.3); filter: brightness(1.2) contrast(1); }
+    20% { opacity: 0.3; transform: rotate(90deg) scale(0.5); filter: brightness(1.5) contrast(1.5); }
+    40% { opacity: 0.7; transform: rotate(90deg) scale(0.8); filter: brightness(1.8) contrast(1.8); }
+    60% { opacity: 1; transform: rotate(90deg) scale(1.1); filter: brightness(2) contrast(2); }
+    80% { opacity: 1; transform: rotate(90deg) scale(1.2); filter: brightness(2.2) contrast(2.2); }
+    100% { opacity: 1; transform: rotate(90deg) scale(1.25); filter: brightness(2) contrast(2); }
+}
+
+@keyframes jumpscare-shake-strong {
+    0% { transform: rotate(90deg) scale(1.25) translateX(0); }
+    10% { transform: rotate(90deg) scale(1.25) translateX(-30px); }
+    20% { transform: rotate(90deg) scale(1.25) translateX(30px); }
+    30% { transform: rotate(90deg) scale(1.25) translateX(-25px); }
+    40% { transform: rotate(90deg) scale(1.25) translateX(25px); }
+    50% { transform: rotate(90deg) scale(1.25) translateX(-18px); }
+    60% { transform: rotate(90deg) scale(1.25) translateX(18px); }
+    70% { transform: rotate(90deg) scale(1.25) translateX(-10px); }
+    80% { transform: rotate(90deg) scale(1.25) translateX(10px); }
+    90% { transform: rotate(90deg) scale(1.25) translateX(-3px); }
+    100% { transform: rotate(90deg) scale(1.25) translateX(0); }
+}
+
+@keyframes jumpscare-flash {
+    0%, 100% { filter: brightness(2) contrast(2) drop-shadow(0 0 80px #ff0000); }
+    20% { filter: brightness(4) contrast(3) drop-shadow(0 0 120px #ff0000); }
+    40% { filter: brightness(1) contrast(2.5) drop-shadow(0 0 40px #ff0000); }
+    60% { filter: brightness(3) contrast(4) drop-shadow(0 0 160px #ff0000); }
+    80% { filter: brightness(0.7) contrast(2) drop-shadow(0 0 20px #ff0000); }
+}
+ 
